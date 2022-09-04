@@ -138,6 +138,7 @@ endif (NOT LIB_INSTALL_DIR)
 add_subdirectory(inc)
 add_subdirectory(src)
 add_subdirectory(example)
+add_subdirectory(lottie2png)
 
 if (LOTTIE_TEST)
     enable_testing()
