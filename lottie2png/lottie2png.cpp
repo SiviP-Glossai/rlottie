@@ -1,10 +1,13 @@
 #include <rlottie.h>
 
+#include <cstdio>
 #include<iostream>
 #include<string>
 #include<vector>
 #include<array>
-
+#include <iostream>
+#include <format>
+#include <string>
 #ifndef _WIN32
 #include<libgen.h>
 #else
@@ -31,8 +34,7 @@ public:
         const void *pImage = reinterpret_cast<const void*>(surface.buffer());
         auto numButes = surface.bytesPerLine();
         bool res = fpng::fpng_encode_image_to_file(fileName.data(), pImage, surface.width(), surface.height(), num_chans);
-
-        // TODO: Pigure out a way to convert rlottie::Surface -> Png file
+        // sprintf(str, idx)
         // Png name should come from signature and be of the format: "<name>%d.png"
         
     }
@@ -78,6 +80,7 @@ class App {
 public:
     int render(uint32_t w, uint32_t h)
     {
+        
         auto player = rlottie::Animation::loadFromFile(fileName);
         if (!player) return help();
 
@@ -88,8 +91,13 @@ public:
         for (size_t i = 0; i < frameCount ; i++) {
             rlottie::Surface surface(buffer.get(), w, h, w * 4);
             player->renderSync(i, surface);
-            std::string file = std::string("out/out") + std::to_string(i) + ".png";
-            builder.saveFrame(surface, file);
+
+            /////////////////
+            //printf(argv);
+            char outFileName[256];
+            sprintf(outFileName, pngName.c_str(), static_cast<int>(i));
+            std::string outFileNameStr = std::string(outFileName);
+            builder.saveFrame(surface, outFileNameStr);
         }
         return result();
     }
@@ -170,7 +178,6 @@ main(int argc, char **argv)
     size_t w, h;
 
     if (app.setup(argc, argv, &w, &h)) return 1;
-
     app.render(w, h);
 
     return 0;
